@@ -41,11 +41,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="../index.php">Início</a>
+                <li class="nav-item">
+                        <a class="nav-link" href="../index.php">Início</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="ListaDosSantos.php">Sobre os Santos</a>
+                        <a class="nav-link active" href="ListaDosSantos.php">Sobre os Santos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="SantoDoDia.php">Santo do Dia</a>

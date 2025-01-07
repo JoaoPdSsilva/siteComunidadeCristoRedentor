@@ -58,7 +58,9 @@
     while ($linha = mysqli_fetch_array($consulta)) {
         echo '<div class="col-md-4 mb-4">';
         echo '<div class="card santo-card">';
-        echo '<img src="' . htmlspecialchars($linha['imagem'], ENT_QUOTES, 'UTF-8') . '" alt="Imagem do Santo">';
+        echo '<a href="view/ListaDosSantos.php?santo=' . $linha['id'] . '" class="text-decoration-none text-dark">';
+        echo '<img src="' . htmlspecialchars($linha['imagem'], ENT_QUOTES, 'UTF-8') . '" class="card-img-top" alt="Imagem do Santo">';
+        echo '</a>';
         echo '<div class="card-body">';
         echo '<h5 class="card-title">' . htmlspecialchars($linha['nome'], ENT_QUOTES, 'UTF-8') . '</h5>';
         echo '<p class="card-text">' . htmlspecialchars($linha['historia'], ENT_QUOTES, 'UTF-8') . '</p>';
@@ -67,6 +69,7 @@
         echo '</div>';
         echo '</div>';
     }
+    
 
     mysqli_close($conexao);
 ?>
@@ -81,16 +84,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/index.js"></script>
     <script>
-        // Use o jQuery para aguardar o carregamento da página
         $(document).ready(function() {
-            // Exiba o SweetAlert
+            $('footer').hide()
             Swal.fire({
                 title: 'Olá! Bem-vindo às Histórias dos Santos',
-                text: 'Saiba que ela está em desenvolvimento, por isso não tem muitas informações sobre os santos',
+                text: 'Este site está em desenvolvimento e, por isso, ainda não possui muitas informações sobre os santos. Agradecemos pela sua paciência e compreensão. 😊',
                 icon: 'warning',
                 confirmButtonText: 'OK'
             });
+            $('footer').show()
         });
+
     </script>
 </body>
 

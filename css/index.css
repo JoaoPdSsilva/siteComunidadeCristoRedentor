@@ -41,3 +41,9 @@
 .card-body {
     background-color: #fff;
 }
+.card {
+    display: flex;
+    flex-direction: column; /* Organiza o conteúdo em uma coluna */
+    min-height: 300px; /* Altura mínima */
+    flex-grow: 1; /* Faz com que o card ocupe espaço disponível */
+}

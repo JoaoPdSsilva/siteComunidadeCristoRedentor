@@ -12,19 +12,22 @@
 
 
 <style>
-     html, body {
-        height: 100%;
-    }
+html, body {
+    height: 100%;
+}
 
-    body {
-        display: flex;
-        flex-direction: column;
-    }
+body {
+    display: flex;
+    flex-direction: column;
+}
 
-    .container {
-        flex: 1; /* Faz o conteúdo principal ocupar o espaço restante */
-    }
+.container {
+    flex: 1; /* Faz com que o conteúdo principal cresça para ocupar o espaço disponível */
+}
 
+.footer {
+    margin-top: auto; /* Empurra o footer para o fim da página */
+}
 </style>
 
 </head>
@@ -81,9 +84,8 @@
         </div>
     </div>
 
-    <!-- Rodapé -->
     <footer class="footer bg-dark text-white text-center py-3 mt-5">
-        <p>&copy; <?php echo date("Y"); ?> Contato. Todos os direitos reservados.</p>
+    <p>&copy; <?php echo date("Y"); ?> Histórias dos Santos. Todos os direitos reservados.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -13,6 +13,7 @@
     <style>
         html, body {
             height: 100%;
+            overflow-x: hidden; /* Evita rolagem horizontal */
         }
 
         body {
@@ -58,112 +59,87 @@
     </nav>
 
     <div class="container mt-5">
-    <div class="row justify-content-center">
-        <?php 
-        include '../conexao.php';
+        <div class="row justify-content-center">
+            <?php 
+            include '../conexao.php';
 
-        // Número de santos por página
-        $por_pagina = 5;
+            // Número de santos por página
+            $por_pagina = 5;
 
-        // Pega a página atual via GET, se não existir, define como 1
-        $pagina_atual = isset($_GET['pagina']) ? intval($_GET['pagina']) : 1;
+            // Pega a página atual via GET, se não existir, define como 1
+            $pagina_atual = isset($_GET['pagina']) ? intval($_GET['pagina']) : 1;
 
-        // Calcula o início da consulta (OFFSET)
-        $inicio = ($pagina_atual - 1) * $por_pagina;
+            // Calcula o início da consulta (OFFSET)
+            $inicio = ($pagina_atual - 1) * $por_pagina;
 
-        // Verifica se foi passado um ID na URL para exibir um santo específico
-        $id_santo = isset($_GET['santo']) ? intval($_GET['santo']) : null;
+            // Verifica se foi passado um ID na URL para exibir um santo específico
+            $id_santo = isset($_GET['santo']) ? intval($_GET['santo']) : null;
 
-        if ($id_santo) {
-            // Consulta para exibir informações de um único santo
-            $consulta_santos = "SELECT * FROM santos WHERE id = $id_santo";
-            echo '<div class="container text-center mt-5"> <h1>Informações do Santo</h1> <p class="lead">Detalhes sobre o santo escolhido.</p> </div>';
-        } else {
-            // Consulta para listar santos com paginação
-            $consulta_santos = "SELECT * FROM santos ORDER BY YEAR(data_beatificacao) DESC LIMIT $inicio, $por_pagina";
-            echo '<div class="container text-center mt-5"> <h1>Sobre os Santos</h1> <p class="lead">Descubra os santos e suas histórias!</p> </div>';
-        }
-
-        $consulta = mysqli_query($conexao, $consulta_santos);
-
-        if (mysqli_num_rows($consulta) > 0) {
-            // Exibe os santos
-            while ($linha = mysqli_fetch_array($consulta)) {
-                echo '<div class="col-md-4 col-lg-4 mb-4 d-flex justify-content-center">';
-                echo '<div class="card card-horizontal shadow-sm">';
-                echo '<a href="ListaDosSantos.php?santo=' . $linha['id'] . '">';
-                echo '<img src="' . htmlspecialchars($linha['imagem'], ENT_QUOTES, 'UTF-8') . '" alt="Imagem do Santo" class="card-img">';
-                echo '</a>';
-                echo '<div class="card-body">';
-                echo '<h5 class="card-title">' . htmlspecialchars($linha['nome'], ENT_QUOTES, 'UTF-8') . '</h5>';
-                echo '<p class="card-text">' . htmlspecialchars($linha['historia'], ENT_QUOTES, 'UTF-8') . '</p>';
-                echo '</div>';
-                echo '</div>';
-                echo '</div>';
+            if ($id_santo) {
+                // Consulta para exibir informações de um único santo
+                $consulta_santos = "SELECT * FROM santos WHERE id = $id_santo";
+                echo '<div class="container text-center mt-5"> <h1>Informações do Santo</h1> <p class="lead">Detalhes sobre o santo escolhido.</p> </div>';
+            } else {
+                // Consulta para listar santos com paginação
+                $consulta_santos = "SELECT * FROM santos ORDER BY YEAR(data_beatificacao) DESC LIMIT $inicio, $por_pagina";
+                echo '<div class="container text-center mt-5"> <h1>Sobre os Santos</h1> <p class="lead">Descubra os santos e suas histórias!</p> </div>';
             }
-        } else {
-            echo '<p class="text-center">Nenhum santo encontrado.</p>';
-        }
 
-        // Paginação: contar o total de registros
-        $consulta_total = "SELECT COUNT(*) AS total FROM santos";
-        $resultado_total = mysqli_query($conexao, $consulta_total);
-        $linha_total = mysqli_fetch_array($resultado_total);
-        $total_santos = $linha_total['total'];
+            $consulta = mysqli_query($conexao, $consulta_santos);
 
-        // Calcular número total de páginas
-        $total_paginas = ceil($total_santos / $por_pagina);
+            if (mysqli_num_rows($consulta) > 0) {
+                while ($linha = mysqli_fetch_array($consulta)) {
+                    echo '<div class="col-md-4 col-lg-4 mb-4 d-flex justify-content-center">';
+                    echo '<div class="card card-horizontal shadow-sm">';
 
-        // Exibe a navegação de página
-        echo '<nav aria-label="Page navigation example">';
-        echo '<ul class="pagination justify-content-center">';
+                    // Remove a ancora se houver um santo específico
+                    if (!$id_santo) {
+                        echo '<a href="ListaDosSantos.php?santo=' . $linha['id'] . '">';
+                    }
 
-        // Link "Anterior"
-        if ($pagina_atual > 1) {
-            echo '<li class="page-item"><a class="page-link" href="?pagina=' . ($pagina_atual - 1) . '">Anterior</a></li>';
-        }
+                    echo '<img src="' . htmlspecialchars($linha['imagem'], ENT_QUOTES, 'UTF-8') . '" alt="Imagem do Santo" class="card-img">';
 
-        // Links de páginas
-        for ($i = 1; $i <= $total_paginas; $i++) {
-            echo '<li class="page-item' . ($i == $pagina_atual ? ' active' : '') . '">';
-            echo '<a class="page-link" href="?pagina=' . $i . '">' . $i . '</a>';
-            echo '</li>';
-        }
+                    if (!$id_santo) {
+                        echo '</a>';
+                    }
 
-        // Link "Próximo"
-        if ($pagina_atual < $total_paginas) {
-            echo '<li class="page-item"><a class="page-link" href="?pagina=' . ($pagina_atual + 1) . '">Próximo</a></li>';
-        }
+                    echo '<div class="card-body">';
+                    echo '<h5 class="card-title">' . htmlspecialchars($linha['nome'], ENT_QUOTES, 'UTF-8') . '</h5>';
+                    echo '<p class="card-text">' . htmlspecialchars($linha['historia'], ENT_QUOTES, 'UTF-8') . '</p>';
+                    echo '</div>';
+                    echo '</div>';
+                    echo '</div>';
+                }
+            } else {
+                echo '<p class="text-center">Nenhum santo encontrado.</p>';
+            }
 
-        echo '</ul>';
-        echo '</nav>';
+            if (!$id_santo) { // Não exibir paginação se houver um santo escolhido
+                $consulta_total = "SELECT COUNT(*) AS total FROM santos";
+                $resultado_total = mysqli_query($conexao, $consulta_total);
+                $linha_total = mysqli_fetch_array($resultado_total);
+                $total_santos = $linha_total['total'];
+                $total_paginas = ceil($total_santos / $por_pagina);
+                echo '<nav aria-label="Page navigation example"><ul class="pagination justify-content-center">';
+                if ($pagina_atual > 1) {
+                    echo '<li class="page-item"><a class="page-link" href="?pagina=' . ($pagina_atual - 1) . '">Anterior</a></li>';
+                }
+                for ($i = 1; $i <= $total_paginas; $i++) {
+                    echo '<li class="page-item' . ($i == $pagina_atual ? ' active' : '') . '"><a class="page-link" href="?pagina=' . $i . '">' . $i . '</a></li>';
+                }
+                if ($pagina_atual < $total_paginas) {
+                    echo '<li class="page-item"><a class="page-link" href="?pagina=' . ($pagina_atual + 1) . '">Próximo</a></li>';
+                }
+                echo '</ul></nav>';
+            }
 
-        mysqli_close($conexao);
-        ?>
+            mysqli_close($conexao);
+            ?>
+        </div>
     </div>
-</div>
-
 
     <footer class="footer bg-dark text-white text-center py-3 mt-5">
         <p>&copy; <?php echo date("Y"); ?> Histórias dos Santos. Todos os direitos reservados.</p>
     </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/index.js"></script>    
-    <script>
-        $(document).ready(function() {
-            if (!localStorage.getItem('alerta_exibido')) {
-                Swal.fire({
-                    title: 'Olá! Bem-vindo às Histórias dos Santos',
-                    text: 'Este site está em desenvolvimento e, por isso, ainda não possui muitas informações sobre os santos. Agradecemos pela sua paciência e compreensão. 😊',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                });
-
-                localStorage.setItem('alerta_exibido', 'true');
-            }
-        });
-    </script>
 </body>
-
 </html>

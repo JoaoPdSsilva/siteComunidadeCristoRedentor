@@ -92,15 +92,38 @@ body {
     <script src="../js/index.js"></script>    
     <script>
         $('#contactForm').on('submit', function(e) {
-            e.preventDefault();
+    e.preventDefault();
+
+    const formData = {
+        nome: $('#nome').val(),
+        email: $('#email').val(),
+        mensagem: $('#mensagem').val()
+    };
+
+    $.ajax({
+        url: '../enviarEmail.php', // Arquivo PHP que processa o envio
+        type: 'POST',
+        data: formData,
+        success: function(response) {
             Swal.fire({
-                title: '',
-                text: 'Mensagem enviada com sucesso!',
+                title: 'Sucesso!',
+                text: response,
                 icon: 'success',
                 confirmButtonText: 'OK'
             });
-            this.reset();
-        })
+            $('#contactForm')[0].reset(); // Limpa o formulário
+        },
+        error: function(xhr) {
+            Swal.fire({
+                title: 'Erro!',
+                text: xhr.responseText || 'Não foi possível enviar a mensagem.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+});
+
     </script>
 </body>
 

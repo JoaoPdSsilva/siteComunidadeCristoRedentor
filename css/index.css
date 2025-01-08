@@ -43,7 +43,33 @@
 }
 .card {
     display: flex;
-    flex-direction: column; /* Organiza o conteúdo em uma coluna */
-    min-height: 300px; /* Altura mínima */
-    flex-grow: 1; /* Faz com que o card ocupe espaço disponível */
+    flex-direction: column;
+    min-height: 300px; 
+    flex-grow: 1; 
+}
+
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; 
+    margin-top: 20px; 
+    padding: 10px 0; 
+}
+
+.pagination .page-item {
+    margin: 0 5px;
+}
+
+.pagination .page-link {
+    padding: 8px 12px;
+    font-size: 14px; 
+    border-radius: 5px; 
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d; 
+    pointer-events: none; 
+    background-color: transparent;
+    border: none;
 }

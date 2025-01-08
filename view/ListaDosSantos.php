@@ -120,18 +120,46 @@
                 $linha_total = mysqli_fetch_array($resultado_total);
                 $total_santos = $linha_total['total'];
                 $total_paginas = ceil($total_santos / $por_pagina);
-                echo '<nav aria-label="Page navigation example"><ul class="pagination justify-content-center">';
+            
+                // Define limites visíveis
+                $max_links = 3; // Máximo de páginas visíveis
+                $start = max(1, $pagina_atual - $max_links);
+                $end = min($total_paginas, $pagina_atual + $max_links);
+            
+                echo '<nav aria-label="Page navigation example">';
+                echo '<ul class="pagination justify-content-center">';
+            
+                // Botão "Anterior"
                 if ($pagina_atual > 1) {
                     echo '<li class="page-item"><a class="page-link" href="?pagina=' . ($pagina_atual - 1) . '">Anterior</a></li>';
                 }
-                for ($i = 1; $i <= $total_paginas; $i++) {
-                    echo '<li class="page-item' . ($i == $pagina_atual ? ' active' : '') . '"><a class="page-link" href="?pagina=' . $i . '">' . $i . '</a></li>';
+            
+                // Elipse para páginas anteriores ocultas
+                if ($start > 1) {
+                    echo '<li class="page-item"><a class="page-link" href="?pagina=1">1</a></li>';
+                    echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
                 }
+            
+                // Exibe páginas dentro do limite
+                for ($i = $start; $i <= $end; $i++) {
+                    echo '<li class="page-item' . ($i == $pagina_atual ? ' active' : '') . '">';
+                    echo '<a class="page-link" href="?pagina=' . $i . '">' . $i . '</a></li>';
+                }
+            
+                // Elipse para páginas posteriores ocultas
+                if ($end < $total_paginas) {
+                    echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                    echo '<li class="page-item"><a class="page-link" href="?pagina=' . $total_paginas . '">' . $total_paginas . '</a></li>';
+                }
+            
+                // Botão "Próximo"
                 if ($pagina_atual < $total_paginas) {
                     echo '<li class="page-item"><a class="page-link" href="?pagina=' . ($pagina_atual + 1) . '">Próximo</a></li>';
                 }
+            
                 echo '</ul></nav>';
             }
+            
 
             mysqli_close($conexao);
             ?>
@@ -141,5 +169,9 @@
     <footer class="footer bg-dark text-white text-center py-3 mt-5">
         <p>&copy; <?php echo date("Y"); ?> Histórias dos Santos. Todos os direitos reservados.</p>
     </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/index.js"></script>
 </body>
 </html>
